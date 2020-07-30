@@ -136,7 +136,7 @@ class BlueHook
         }
 
         try {
-            $response = $this->SIB->addContactToList($listId, array('emails' => $email));
+            $response = $this->SIB->addContactToList($listId, array('emails' => array($email)));
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] contact add to list response: '. json_encode($response));
         } catch (Exception $e) {
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->addContactToList: '. $e->getMessage());
