@@ -110,13 +110,17 @@ class BlueHook
     }
 
     public function subscribe($email, $listId, $fields = array()) { 
-
+        
+        if(empty($email) || empty($listId)) return;
+        $contact = null;
         try { 
-            $response = $this->SIB->getContactInfo($email);
+            $contact = $this->SIB->getContactInfo($email);
+            $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Contact List IDs: '. json_encode($contact->getListIds()));
         } catch (Exception $e) {
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->getContactInfo: '. $e->getMessage());
         } 
-        if(!$response->getId()){
+        
+        if(!$contact->getId()){
             try {
                 $contact = new \SendinBlue\Client\Model\CreateContact();
                 $contact->setEmail($email);
@@ -129,13 +133,13 @@ class BlueHook
                 $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->createContact: '. $e->getMessage());
             }
         }
-
-        try {
-            $response = $this->SIB->updateContact($email, array('attributes' => $fields));
-            $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Sending Attributes: '. json_encode($fields));
-            $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] contact update response: '. json_encode($response));
-        } catch (Exception $e) {
-            $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->updateContact: '. $e->getMessage());
+        
+        if(!empty($fields)){
+            try {
+                $response = $this->SIB->updateContact($email, array('attributes' => $fields));
+            } catch (Exception $e) {
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->updateContact: '. $e->getMessage());
+            }
         }
 
         try {
