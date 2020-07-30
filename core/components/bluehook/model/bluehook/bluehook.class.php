@@ -117,22 +117,22 @@ class BlueHook
         } catch (Exception $e) {
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->getContactInfo: '. $e->getMessage());
         } 
-
-        try {
-            $contact = new \SendinBlue\Client\Model\CreateContact();
-            $contact->setEmail($email);
-            $contact->setAttributes($fields);
-            $contact->setListIds(array($listId));
-            $contact->setUpdateEnabled(true);
-            if($contact->valid()){
-                $response = $this->SIB->createContact($contact);
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] contact create response: '. json_encode($response->getAttributes()));
-            }else{
-                $response = $contact->listInvalidProperties();
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] contact create response: '. json_encode($response));
+        if(!$response->getId()){
+            try {
+                $contact = new \SendinBlue\Client\Model\CreateContact();
+                $contact->setEmail($email);
+                $contact->setAttributes($fields);
+                $contact->setListIds(array($listId));
+                if($contact->valid()){
+                    $response = $this->SIB->createContact($contact);
+                    $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] contact create response: '. json_encode($response->getAttributes()));
+                }else{
+                    $response = $contact->listInvalidProperties();
+                    $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] contact create response: '. json_encode($response));
+                }
+            } catch (Exception $e) {
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->createContact: '. $e->getMessage());
             }
-        } catch (Exception $e) {
-            $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->createContact: '. $e->getMessage());
         }
 
         try {
