@@ -1,0 +1,29 @@
+{
+    "name": "BlueHook",
+    "lowCaseName": "BlueHook",
+    "description": "Send In Blue Hook for MODX FormIt",
+    "author": "matdave",
+    "version": "1.0.0-beta1",
+    "package": {
+      "elements": {
+        "snippets": [
+          {
+            "name": "SendInBlue.FormIt.Hook",
+            "file": "formit.hook.snippet.php"
+          }
+        ]
+      },
+      "systemSettings": [
+        {
+            "key": "api-key",
+            "type": "text-password",
+            "value": ""
+          }
+      ],
+      "build": {
+        "readme": "docs/readme.txt",
+        "license": "docs/license.txt",
+        "changelog": "docs/changelog.txt"
+      }
+    }
+  }
