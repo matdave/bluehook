@@ -126,10 +126,11 @@ class BlueHook
             $contact->setUpdateEnabled(true);
             if($contact->valid()){
                 $response = $this->SIB->createContact($contact);
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] contact create response: '. json_encode($response->getAttributes()));
             }else{
                 $response = $contact->listInvalidProperties();
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] contact create response: '. json_encode($response));
             }
-            $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] contact create response: '. json_encode($response));
         } catch (Exception $e) {
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->createContact: '. $e->getMessage());
         }
