@@ -119,7 +119,7 @@ class BlueHook
             ); 
             $contact = new \SendinBlue\Client\Model\CreateContact($properties);
             $response = $this->SIB->createContact($contact);
-            $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] contact response: '. $response);
+            $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] contact response: '. json_encode($response));
         } catch (Exception $e) {
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->getContactInfo: '. $e->getMessage());
         } 
