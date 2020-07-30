@@ -111,13 +111,12 @@ class BlueHook
 
     public function subscribe($email, $listId, $fields = array()) { 
         try {
-            $properties = array(
-                'email' => $email,
-                'attributes' => $fields,
-                'listIds' => array($listId),
-                'updateEnabled' => true
-            ); 
-            $contact = new \SendinBlue\Client\Model\CreateContact($properties);
+            $contact = new \SendinBlue\Client\Model\CreateContact();
+            $contact->setEmail($email);
+            $contact->setAttributes($fields);
+            $contact->setListIds(array($listId));
+            $contact->setUpdateEnabled(true);
+
             $response = $this->SIB->createContact($contact);
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] contact response: '. json_encode($response));
         } catch (Exception $e) {
