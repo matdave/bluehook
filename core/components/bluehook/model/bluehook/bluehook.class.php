@@ -132,6 +132,7 @@ class BlueHook
 
         try {
             $response = $this->SIB->updateContact($email, array('attributes' => $fields));
+            $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Sending Attributes: '. json_encode($fields));
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] contact update response: '. json_encode($response));
         } catch (Exception $e) {
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->updateContact: '. $e->getMessage());
