@@ -124,9 +124,7 @@ class BlueHook
                 $contact = new \SendinBlue\Client\Model\CreateContact();
                 $contact->setEmail($email);
                 if($contact->valid()){
-                    $response = $this->SIB->createContact($contact);
-                }else{
-                    $response = $contact->listInvalidProperties();
+                    $this->SIB->createContact($contact);
                 }
             } catch (Exception $e) {
                 $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->createContact: '. $e->getMessage());
@@ -135,7 +133,7 @@ class BlueHook
         
         if(!empty($fields)){
             try {
-                $response = $this->SIB->updateContact($email, array('attributes' => $fields));
+                $this->SIB->updateContact($email, array('attributes' => $fields));
             } catch (Exception $e) {
                 $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->updateContact: '. $e->getMessage());
             }
@@ -144,7 +142,7 @@ class BlueHook
         $listIds = $contact->getListIds();
         if(is_array($listIds) && !in_array($listId, $listIds)){
             try {
-                $response = $this->SIB->addContactToList($listId, array('emails' => array($email))); 
+                $this->SIB->addContactToList($listId, array('emails' => array($email))); 
             } catch (Exception $e) {
                 $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->addContactToList: '. $e->getMessage());
             }
