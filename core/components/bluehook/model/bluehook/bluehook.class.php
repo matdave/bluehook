@@ -40,6 +40,7 @@ class BlueHook
         require_once $this->config['corePath'].'model/vendor/autoload.php';
         // Configure API key authorization: api-key
         $config = SendinBlue\Client\Configuration::getDefaultConfiguration()->setApiKey('api-key', $this->getOption('api-key')); 
+        $config = SendinBlue\Client\Configuration::getDefaultConfiguration()->setApiKey('partner-key', $this->getOption('api-key')); 
 
         $this->SIB = new SendinBlue\Client\Api\ContactsApi(
             new GuzzleHttp\Client(),
