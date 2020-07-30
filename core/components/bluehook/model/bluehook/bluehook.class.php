@@ -114,8 +114,7 @@ class BlueHook
         if(empty($email) || empty($listId)) return;
         $contact = null;
         try { 
-            $contact = $this->SIB->getContactInfo($email);
-            $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Contact List IDs: '. json_encode($contact->getListIds()));
+            $contact = $this->SIB->getContactInfo($email); 
         } catch (Exception $e) {
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->getContactInfo: '. $e->getMessage());
         } 
@@ -141,11 +140,14 @@ class BlueHook
                 $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->updateContact: '. $e->getMessage());
             }
         }
-
-        try {
-            $response = $this->SIB->addContactToList($listId, array('emails' => array($email))); 
-        } catch (Exception $e) {
-            $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->addContactToList: '. $e->getMessage());
+        
+        $listIds = $contact->getListIds();
+        if(is_array($listIds) && !in_array($listId, $listIds)){
+            try {
+                $response = $this->SIB->addContactToList($listId, array('emails' => array($email))); 
+            } catch (Exception $e) {
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->addContactToList: '. $e->getMessage());
+            }
         }
     }
 
