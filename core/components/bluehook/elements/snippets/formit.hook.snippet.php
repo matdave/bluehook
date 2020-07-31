@@ -28,7 +28,7 @@ $values = $hook->getValues();
 $listId = $hook->formit->config['bluehookList'];
 
 // Email field to check against
-$email = $hook->formit->config['bluehookEmail'];
+$email = $modx->getOption('bluehookEmail', $hook->formit->config, 'email');
 
 // Optin Field for Signup (Set to 1/true if ignoring)
 $optin = $hook->formit->config['bluehookOptin'];

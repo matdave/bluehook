@@ -18,6 +18,10 @@ class BlueHook
      * SendInBlue Class
      */
     private $SIB = null;
+    /**
+     * @var contact|null $this->contact
+     */
+    public $contact = null;
 
     public function __construct(modX &$modx, array $config = array())
     {
@@ -109,27 +113,42 @@ class BlueHook
         return $option;
     }
 
-    public function subscribe($email, $listId, $fields = array()) { 
-        
-        if(empty($email) || empty($listId)) return;
-        $contact = null;
+    public function getContact($email) {
+        if(empty($email)) return false;
         try { 
-            $contact = $this->SIB->getContactInfo($email); 
+            $this->contact = $this->SIB->getContactInfo($email); 
         } catch (Exception $e) {
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->getContactInfo: '. $e->getMessage());
         } 
         
-        if(!$contact->getId()){
+        if(!$this->contact->getId()){
             try {
-                $contact = new \SendinBlue\Client\Model\CreateContact();
-                $contact->setEmail($email);
-                if($contact->valid()){
-                    $this->SIB->createContact($contact);
+                $this->contact = new \SendinBlue\Client\Model\CreateContact();
+                $this->contact->setEmail($email);
+                if($this->contact->valid()){
+                    $this->SIB->createContact($this->contact);
                 }
             } catch (Exception $e) {
                 $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->createContact: '. $e->getMessage());
             }
+        } 
+        return true;
+    }
+
+    public function checkListStatus($email, $listId) {
+        if(empty($email) || empty($listId)) return false;
+        if(!$this->getContact($email)) return false;
+        $listIds = $this->contact->getListIds();
+        if(is_array($listIds) && !in_array($listId, $listIds)){
+            return false;
         }
+        return true;
+    }
+
+    public function subscribe($email, $listId, $fields = array()) { 
+        
+        if(empty($email) || empty($listId)) return;
+        if(!$this->getContact($email)) return false;
         
         if(!empty($fields)){
             try {
@@ -139,7 +158,7 @@ class BlueHook
             }
         }
         
-        $listIds = $contact->getListIds();
+        $listIds = $this->contact->getListIds();
         if(is_array($listIds) && !in_array($listId, $listIds)){
             try {
                 $this->SIB->addContactToList($listId, array('emails' => array($email))); 

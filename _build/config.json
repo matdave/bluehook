@@ -10,6 +10,10 @@
           {
             "name": "SendInBlue.FormIt.Hook",
             "file": "formit.hook.snippet.php"
+          },
+          {
+            "name": "SendInBlue.checkList",
+            "file": "checkList.snippet.php"
           }
         ]
       },
