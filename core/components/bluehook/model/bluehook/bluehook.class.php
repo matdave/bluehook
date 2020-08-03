@@ -121,7 +121,7 @@ class BlueHook
             $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->getContactInfo: '. $e->getMessage());
         } 
         
-        if(!$this->contact->getId()){
+        if($this->contact == null || !$this->contact->getId()){
             try {
                 $this->contact = new \SendinBlue\Client\Model\CreateContact();
                 $this->contact->setEmail($email);
