@@ -118,7 +118,7 @@ class BlueHook
         try { 
             $this->contact = $this->SIB->getContactInfo($email); 
         } catch (Exception $e) {
-            $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->getContactInfo: '. $e->getMessage());
+            $this->modx->log(xPDO::LOG_LEVEL_INFO, '[BlueHook] Exception when calling ContactsApi->getContactInfo: '. $e->getMessage());
         } 
         
         if($this->contact == null || !$this->contact->getId()){
@@ -130,7 +130,7 @@ class BlueHook
                         $this->SIB->createContact($this->contact);
                     }
                 } catch (Exception $e) {
-                    $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->createContact: '. $e->getMessage());
+                    $this->modx->log(xPDO::LOG_LEVEL_INFO, '[BlueHook] Exception when calling ContactsApi->createContact: '. $e->getMessage());
                 }
             } else {
                 return false;
@@ -158,7 +158,7 @@ class BlueHook
             try {
                 $this->SIB->updateContact($email, array('attributes' => $fields));
             } catch (Exception $e) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->updateContact: '. $e->getMessage());
+                $this->modx->log(xPDO::LOG_LEVEL_INFO, '[BlueHook] Exception when calling ContactsApi->updateContact: '. $e->getMessage());
             }
         }
         
@@ -167,7 +167,7 @@ class BlueHook
             try {
                 $this->SIB->addContactToList($listId, array('emails' => array($email))); 
             } catch (Exception $e) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->addContactToList: '. $e->getMessage());
+                $this->modx->log(xPDO::LOG_LEVEL_INFO, '[BlueHook] Exception when calling ContactsApi->addContactToList: '. $e->getMessage());
             }
         }
     }
@@ -182,7 +182,7 @@ class BlueHook
             try {
                 $this->SIB->removeContactFromList($listId, array('emails' => array($email))); 
             } catch (Exception $e) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->removeContactFromList: '. $e->getMessage());
+                $this->modx->log(xPDO::LOG_LEVEL_INFO, '[BlueHook] Exception when calling ContactsApi->removeContactFromList: '. $e->getMessage());
             }
         }
 

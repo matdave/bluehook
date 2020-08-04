@@ -13,7 +13,7 @@ $bluehook = $modx->getService(
 );
 
 if (!($bluehook instanceof BlueHook)) {
-    $modx->log(xPDO::LOG_LEVEL_ERROR, '[SendInBlue.FormIt.Hook] Could not load bluehook class.');
+    $modx->log(xPDO::LOG_LEVEL_ERROR, '[SendInBlue.checkList] Could not load bluehook class.');
     if ($debug) {
         $hook->addError('bluehook', 'Could not load Segment class.');
         return false;

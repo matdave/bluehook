@@ -58,6 +58,7 @@ if (empty($email)) {
 if (empty($optin) || !$optin){
     if(!empty($optout)){
         $bluehook->unsubscribe($email, $listId);
+        return true;
     }else{
         if ($debug) {
             $hook->addError('bluehook', 'Not opted in.');
