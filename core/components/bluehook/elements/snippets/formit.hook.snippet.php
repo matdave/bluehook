@@ -33,12 +33,16 @@ $email = $modx->getOption('bluehookEmail', $hook->formit->config, 'email');
 // Optin Field for Signup (Set to 1/true if ignoring)
 $optin = $hook->formit->config['bluehookOptin'];
 
+// Optional Opt-out field (Useful for account updates or systems where you know the email)
+$optout = $hook->formit->config['bluehookOptout'];
+
 // Additional Fields to Track
 $fields = $hook->formit->config['bluehookFields'];
 
 //Process if event is a dynamic field
 $email = $bluehook->getField($email, $values);
 $optin = $bluehook->getField($optin, $values);
+$optout = $bluehook->getField($optin, $values);
 $fields = $bluehook->getProperties($fields, $values);
 
 if (empty($email)) {
@@ -52,11 +56,15 @@ if (empty($email)) {
 }
 
 if (empty($optin) || !$optin){
-    if ($debug) {
-        $hook->addError('bluehook', 'Not opted in.');
-        return false;
-    } else {
-        return true;
+    if(!empty($optout)){
+        $bluehook->unsubscribe($email, $listId);
+    }else{
+        if ($debug) {
+            $hook->addError('bluehook', 'Not opted in.');
+            return false;
+        } else {
+            return true;
+        }
     }
 }
 

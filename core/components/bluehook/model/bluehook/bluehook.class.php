@@ -113,7 +113,7 @@ class BlueHook
         return $option;
     }
 
-    public function getContact($email) {
+    public function getContact($email, $create = true) {
         if(empty($email)) return false;
         try { 
             $this->contact = $this->SIB->getContactInfo($email); 
@@ -122,14 +122,18 @@ class BlueHook
         } 
         
         if($this->contact == null || !$this->contact->getId()){
-            try {
-                $this->contact = new \SendinBlue\Client\Model\CreateContact();
-                $this->contact->setEmail($email);
-                if($this->contact->valid()){
-                    $this->SIB->createContact($this->contact);
+            if($create){
+                try {
+                    $this->contact = new \SendinBlue\Client\Model\CreateContact();
+                    $this->contact->setEmail($email);
+                    if($this->contact->valid()){
+                        $this->SIB->createContact($this->contact);
+                    }
+                } catch (Exception $e) {
+                    $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->createContact: '. $e->getMessage());
                 }
-            } catch (Exception $e) {
-                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->createContact: '. $e->getMessage());
+            } else {
+                return false;
             }
         } 
         return true;
@@ -166,6 +170,22 @@ class BlueHook
                 $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->addContactToList: '. $e->getMessage());
             }
         }
+    }
+
+    public function unsubscribe($email, $listId) {
+        
+        if(empty($email) || empty($listId)) return;
+        if(!$this->getContact($email, false)) return false; 
+        
+        $listIds = $this->contact->getListIds();
+        if(is_array($listIds) && in_array($listId, $listIds)){
+            try {
+                $this->SIB->removeContactFromList($listId, array('emails' => array($email))); 
+            } catch (Exception $e) {
+                $this->modx->log(xPDO::LOG_LEVEL_ERROR, '[BlueHook] Exception when calling ContactsApi->removeContactFromList: '. $e->getMessage());
+            }
+        }
+
     }
 
 }
