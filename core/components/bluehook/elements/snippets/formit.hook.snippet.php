@@ -42,7 +42,7 @@ $fields = $hook->formit->config['bluehookFields'];
 //Process if event is a dynamic field
 $email = $bluehook->getField($email, $values);
 $optin = $bluehook->getField($optin, $values);
-$optout = $bluehook->getField($optin, $values);
+$optout = $bluehook->getField($optout, $values);
 $fields = $bluehook->getProperties($fields, $values);
 
 if (empty($email)) {

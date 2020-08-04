@@ -62,7 +62,7 @@ class BlueHook
         $field = str_replace('[[+', '', $field);
         $field = str_replace('[[!+', '', $field);
         $field = str_replace(']]', '', $field);
-        return ($values[$field]) ? $values[$field] : $field;
+        return (array_key_exists($field,$values)) ? $values[$field] : $field;
     } 
 
     /**
