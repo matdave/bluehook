@@ -84,7 +84,7 @@ class BlueHook
         }
         if (!empty($fields)) {
             foreach ($fields as $k => $v) {
-                $properties[$v] = $values[$k];
+                $properties[$k] = $values[$v];
             }
             return $properties;
         } else {
@@ -156,7 +156,9 @@ class BlueHook
         
         if(!empty($fields)){
             try {
-                $this->SIB->updateContact($email, array('attributes' => $fields));
+                $updateContact = new \SendinBlue\Client\Model\UpdateContact();
+                $updateContact->setAttributes($fields);
+                $this->SIB->updateContact(urlencode($email), $updateContact);
             } catch (Exception $e) {
                 $this->modx->log(xPDO::LOG_LEVEL_INFO, '[BlueHook] Exception when calling ContactsApi->updateContact: '. $e->getMessage());
             }
