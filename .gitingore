@@ -8,7 +8,7 @@ config.core.php
 _packages/*.*
 !_packages/.gitignore
 !_packages/*.zip
-core/components/segment/model/vendor
+core/components/bluehook/model/vendor
 
 # IDE files #
 #############
