@@ -30,6 +30,12 @@ $listId = $hook->formit->config['bluehookList'];
 // Email field to check against
 $email = $modx->getOption('bluehookEmail', $hook->formit->config, 'email');
 
+// templateId for Double Opt-in
+$doi = (int) $modx->getOption('bluehookDoi', $hook->formit->config, 0);
+
+// templateId for Double Opt-in
+$doiRedirectTo = (int) $modx->getOption('bluehookDoiRedirectTo', $hook->formit->config, 0);
+
 // Optin Field for Signup (Set to 1/true if ignoring)
 $optin = $hook->formit->config['bluehookOptin'];
 
@@ -69,6 +75,6 @@ if (empty($optin) || !$optin){
     }
 }
 
-$bluehook->subscribe($email, $listId, $fields);
+$bluehook->subscribe($email, $listId, $fields, $doi, $doiRedirectTo);
 
 return true;

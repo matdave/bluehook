@@ -149,10 +149,14 @@ class BlueHook
         return true;
     }
 
-    public function subscribe($email, $listId, $fields = array()) { 
+    public function subscribe($email, $listId, $fields = array(), $doi = 0, $doiRedirectTo = 0) { 
         
         if(empty($email) || empty($listId)) return;
-        if(!$this->getContact($email)) return false;
+        if(!$this->getContact($email, !boolval($doi))){
+            if($doi){
+                return $this->doisubscribe($email, $listId, $fields, $doi, $doiRedirectTo);
+            }
+        } else{ return false; }
         
         if(!empty($fields)){
             try {
@@ -172,6 +176,26 @@ class BlueHook
                 $this->modx->log(xPDO::LOG_LEVEL_INFO, '[BlueHook] Exception when calling ContactsApi->addContactToList: '. $e->getMessage());
             }
         }
+    }
+
+    public function doisubscribe($email, $listId, $fields = array(), $doi = 0, $doiRedirectTo = 0){
+        if(empty($email) || empty($listId) || !boolval($doi)) return;
+        try {
+            $this->contact = new \SendinBlue\Client\Model\CreateDoiContact();
+            $this->contact->setEmail($email);
+            $this->contact->setAttributes($fields);
+            $this->contact->setIncludeListIds(array($listId));
+            $this->contact->setTemplateId($doi);
+            if($doiRedirectTo){
+                $doiRedirectTo = $this->modx->resource->id;
+            }
+            $this->contact->setRedirectionUrl($this->modx->makeUrl($doiRedirectTo, $this->modx->resource->context_key, '', 'full'));
+            if($this->contact->valid()){
+                $this->SIB->createDoiContact($this->contact);
+            }
+        } catch (Exception $e) {
+            $this->modx->log(xPDO::LOG_LEVEL_INFO, '[BlueHook] Exception when calling ContactsApi->createContact: '. $e->getMessage());
+        } 
     }
 
     public function unsubscribe($email, $listId) {
